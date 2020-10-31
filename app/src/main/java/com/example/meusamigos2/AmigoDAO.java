@@ -46,6 +46,13 @@ public class AmigoDAO {
         }
     }
 
+    public boolean deletarFicticio(int id, int status)
+    {
+        ContentValues cv = new ContentValues();
+        cv.put("Status", status = 0);
+        return gw.getDatabase().update(TABLE_AMIGOS, cv, "ID = ?", new String[] { id + ""}) > 0;
+    }
+
     public boolean deletar(int id)
     {
         return gw.getDatabase().delete(TABLE_AMIGOS, "ID = ?", new String[] { id + ""}) > 0;

@@ -78,7 +78,7 @@ public class AmigoAdapter extends RecyclerView.Adapter<AmigoHolder> {
                             public void onClick(DialogInterface dialogInterface, int i)
                             {
                                 AmigoDAO dao = new AmigoDAO(view.getContext());
-                                boolean ok = dao.deletar(amigo.getId());
+                                boolean ok = dao.deletarFicticio(amigo.getId(), amigo.getStatus());
 
                                 if (ok)
                                 {

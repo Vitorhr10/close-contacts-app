@@ -31,10 +31,17 @@ public class AmigoDAO {
 
         if (id > 0)
         {
-            return gw.getDatabase().update(TABLE_AMIGOS, cv, "ID = ?", new String[] {id + "" }) > 0;
+            if (status == 0) {
+                cv.put("Status", status = 2);
+                return gw.getDatabase().update(TABLE_AMIGOS, cv, "ID = ?", new String[]{id + ""}) > 0;
+            } else {
+                cv.put("Status", status);
+                return gw.getDatabase().update(TABLE_AMIGOS, cv, "ID = ?", new String[]{id + ""}) > 0;
+            }
         }
         else
         {
+            cv.put("Status", status = 1);
             return gw.getDatabase().insert(TABLE_AMIGOS, null, cv) > 0;
         }
     }

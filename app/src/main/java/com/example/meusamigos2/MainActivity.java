@@ -23,14 +23,21 @@ import android.widget.Spinner;
 
 public class MainActivity extends AppCompatActivity {
 
+    boolean lista_deletados = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().hide();
 
-        configurarRecyclerView();
+        if (lista_deletados) {
+            configurarRecyclerView(0);
+        } else {
+            configurarRecyclerView(1);
+        }
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -161,18 +168,31 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     AmigoAdapter adapter;
+    AmigoAdapterDeletados adapterDeletados;
 
-    private void configurarRecyclerView ()
+    private void configurarRecyclerView (int i)
     {
-        recyclerView = (RecyclerView)findViewById(R.id.rcvAmigos);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        if (i == 0) {
+            recyclerView = (RecyclerView) findViewById(R.id.rcvAmigosDeletados);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
 
-        AmigoDAO dao = new AmigoDAO(this);
-        adapter = new AmigoAdapter(dao.retornarAmigos());
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+            AmigoDAO dao = new AmigoDAO(this);
+            adapterDeletados = new AmigoAdapterDeletados(dao.retornarAmigos(i));
+            recyclerView.setAdapter(adapterDeletados);
+            recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        } else {
+            recyclerView = (RecyclerView) findViewById(R.id.rcvAmigos);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+
+            AmigoDAO dao = new AmigoDAO(this);
+            adapter = new AmigoAdapter(dao.retornarAmigos(1));
+            recyclerView.setAdapter(adapter);
+            recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        }
     }
+
 
     Amigo amigoEditado = null;
 

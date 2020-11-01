@@ -46,6 +46,13 @@ public class AmigoDAO {
         }
     }
 
+    public boolean recuperarAmigo(int id, int status)
+    {
+        ContentValues cv = new ContentValues();
+        cv.put("Status", status = 2);
+        return gw.getDatabase().update(TABLE_AMIGOS, cv, "ID = ?", new String[] { id + ""}) > 0;
+    }
+
     public boolean deletarFicticio(int id, int status)
     {
         ContentValues cv = new ContentValues();
@@ -53,25 +60,42 @@ public class AmigoDAO {
         return gw.getDatabase().update(TABLE_AMIGOS, cv, "ID = ?", new String[] { id + ""}) > 0;
     }
 
+
     public boolean deletar(int id)
     {
         return gw.getDatabase().delete(TABLE_AMIGOS, "ID = ?", new String[] { id + ""}) > 0;
     }
 
-    public List<Amigo> retornarAmigos() {
+    public List<Amigo> retornarAmigos(int i) {
         List<Amigo> amigos = new ArrayList<>();
-        Cursor cursor = gw.getDatabase().rawQuery("SELECT * FROM Amigos", null);
 
-        while (cursor.moveToNext()) {
-            int id = cursor.getInt(cursor.getColumnIndex("ID"));
-            String nome = cursor.getString(cursor.getColumnIndex("Nome"));
-            String celular = cursor.getString(cursor.getColumnIndex("Celular"));
-            int status = cursor.getInt(cursor.getColumnIndex("Status"));
-            amigos.add(new Amigo(id, nome, celular, status));
+        if (i == 0) {
+            Cursor cursor = gw.getDatabase().rawQuery("SELECT * FROM Amigos where Status = 0", null);
+
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex("ID"));
+                String nome = cursor.getString(cursor.getColumnIndex("Nome"));
+                String celular = cursor.getString(cursor.getColumnIndex("Celular"));
+                int status = cursor.getInt(cursor.getColumnIndex("Status"));
+                amigos.add(new Amigo(id, nome, celular, status));
+            }
+            cursor.close();
+        } else {
+            Cursor cursor = gw.getDatabase().rawQuery("SELECT * FROM Amigos where Status > 0", null);
+
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex("ID"));
+                String nome = cursor.getString(cursor.getColumnIndex("Nome"));
+                String celular = cursor.getString(cursor.getColumnIndex("Celular"));
+                int status = cursor.getInt(cursor.getColumnIndex("Status"));
+                amigos.add(new Amigo(id, nome, celular, status));
+            }
+            cursor.close();
         }
-        cursor.close();
+
         return amigos;
     }
+
 
     public Amigo retornarUltimoAmigo()
     {

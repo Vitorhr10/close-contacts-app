@@ -31,6 +31,11 @@
         android:visibility="visible" />
 
     <include
+        android:id="@+id/include_amigos_deletados"
+        layout="@layout/listar_amigos_deletados"
+        android:visibility="invisible"/>
+
+    <include
         android:id="@+id/includecadastro"
         layout="@layout/cadastrar_amigos"
         android:visibility="invisible"/>
@@ -41,6 +46,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:backgroundTint="@android:color/holo_red_dark"
+        app:srcCompat="@drawable/ic_add_48"
+        tools:ignore="VectorDrawableCompat" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@android:color/holo_red_dark"
+        app:srcCompat="@drawable/ic_delete_48"
+        tools:ignore="VectorDrawableCompat" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

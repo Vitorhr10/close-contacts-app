@@ -1,6 +1,8 @@
 package com.example.meusamigos2;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +50,32 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.includecadastro).setVisibility(View.VISIBLE);
                 findViewById(R.id.fab).setVisibility(View.INVISIBLE);
                 findViewById(R.id.include_amigos_listagem).setVisibility(View.INVISIBLE);
+            }
+        });
+
+        final TextView titulo = (TextView) findViewById(R.id.txtTitulo);
+
+        final FloatingActionButton fab2 = findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (lista_deletados) {
+                    lista_deletados = !lista_deletados;
+                    findViewById(R.id.include_amigos_deletados).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.include_amigos_listagem).setVisibility(View.VISIBLE);
+                    findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                    fab2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#CC0000")));
+                    fab2.setImageResource(R.drawable.ic_delete_48);
+                    configurarRecyclerView(1);
+                } else {
+                    lista_deletados = !lista_deletados;
+                    findViewById(R.id.include_amigos_deletados).setVisibility(View.VISIBLE);
+                    findViewById(R.id.include_amigos_listagem).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+                    fab2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0000FF")));
+                    fab2.setImageResource(R.drawable.ic_list_alt_48);
+                    configurarRecyclerView(0);
+                }
             }
         });
 

@@ -89,13 +89,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSalvar" />
 
-    <Button
-        android:id="@+id/btnFinalizar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Finalizar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCancelar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

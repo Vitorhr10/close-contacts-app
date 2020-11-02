@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -188,8 +189,23 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.listaAmigos) {
+            lista_deletados = false;
+            findViewById(R.id.include_amigos_deletados).setVisibility(View.INVISIBLE);
+            findViewById(R.id.include_amigos_listagem).setVisibility(View.VISIBLE);
+            //findViewById(R.id.include_enviar_sms).setVisibility(View.INVISIBLE);
+            configurarRecyclerView(1);
+        } else if (id == R.id.listaAmigosDeletados) {
+            lista_deletados = true;
+            findViewById(R.id.include_amigos_deletados).setVisibility(View.VISIBLE);
+            findViewById(R.id.include_amigos_listagem).setVisibility(View.INVISIBLE);
+            //findViewById(R.id.include_enviar_sms).setVisibility(View.INVISIBLE);
+            configurarRecyclerView(0);
+        } else if (id == R.id.sair) {
+            System.exit(0);
+            Toast.makeText(this, "Finalizar Aplicativo", Toast.LENGTH_LONG).show();
+        } else  {
+            Toast.makeText(this, "Nada acontece", Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);

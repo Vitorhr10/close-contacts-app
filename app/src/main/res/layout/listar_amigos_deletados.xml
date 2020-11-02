@@ -30,7 +30,7 @@
         android:gravity="center_horizontal"
         android:text="Clique em cima do Amigo para RECUPERAR"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorTitle"
         app:layout_constraintBottom_toTopOf="@+id/rcvAmigos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.466"

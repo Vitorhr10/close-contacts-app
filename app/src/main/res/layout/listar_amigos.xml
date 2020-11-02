@@ -15,7 +15,7 @@
         android:gravity="center_horizontal"
         android:text="Lista de Amigos"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorTitle"
         app:layout_constraintBottom_toTopOf="@+id/rcvAmigos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.461"

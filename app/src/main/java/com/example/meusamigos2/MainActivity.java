@@ -1,5 +1,6 @@
 package com.example.meusamigos2;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,7 +37,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().hide();
+
+        ActivityCompat.requestPermissions(this, new String[] {
+                Manifest.permission.SEND_SMS
+        }, 1);
 
         if (lista_deletados) {
             configurarRecyclerView(0);
@@ -49,8 +54,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 findViewById(R.id.includemain).setVisibility(View.INVISIBLE);
                 findViewById(R.id.includecadastro).setVisibility(View.VISIBLE);
-                findViewById(R.id.fab).setVisibility(View.INVISIBLE);
                 findViewById(R.id.include_amigos_listagem).setVisibility(View.INVISIBLE);
+                findViewById(R.id.include_amigos_deletados).setVisibility(View.INVISIBLE);
+                //findViewById(R.id.include_enviar_sms).setVisibility(View.INVISIBLE);
             }
         });
 
@@ -145,14 +151,6 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.includecadastro).setVisibility(View.INVISIBLE);
                 findViewById(R.id.fab).setVisibility(View.VISIBLE);
                 findViewById(R.id.include_amigos_listagem).setVisibility(View.VISIBLE);
-            }
-        });
-
-        Button btnFinalizar = (Button)findViewById(R.id.btnFinalizar);
-        btnFinalizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.exit(0);
             }
         });
 

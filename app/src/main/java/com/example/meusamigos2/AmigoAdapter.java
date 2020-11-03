@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,23 +47,63 @@ public class AmigoAdapter extends RecyclerView.Adapter<AmigoHolder> {
     }
 
     @Override
-    public void onBindViewHolder (AmigoHolder holder, int posicao)
+    public void onBindViewHolder (final AmigoHolder holder, int posicao)
     {
         holder.txvAmigo.setText(amigos.get(posicao).getNome());
+        holder.txvAmigoTel.setText(amigos.get(posicao).getCelular());
 
         final Amigo amigo = amigos.get(posicao);
 
-        holder.btnEditar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Activity activity = getActivity(view);
-                    Intent intent = activity.getIntent();
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    intent.putExtra("amigo", amigo);
-                    activity.finish();
-                    activity.startActivity(intent);
-                }
+        holder.btnSms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity activity = getActivity(v);
+                Intent intent = activity.getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                intent.putExtra("sms", amigo);
+                activity.finish();
+                activity.startActivity(intent);
             }
+        });
+
+        holder.btnZap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity activity = getActivity(v);
+                Intent intent = activity.getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                intent.putExtra("sms", amigo);
+                activity.finish();
+                activity.startActivity(intent);
+            }
+        });
+
+        holder.btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String numero = holder.txvAmigoTel.getText().toString();
+
+                Uri uri = Uri.parse("tel:" + numero);
+
+                Activity activity = getActivity(v);
+                Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                activity.finish();
+                activity.startActivity(intent);
+            }
+        });
+
+        holder.btnEditar.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                Activity activity = getActivity(view);
+                Intent intent = activity.getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                intent.putExtra("amigo", amigo);
+                activity.finish();
+                activity.startActivity(intent);
+              }
+           }
         );
 
         holder.btnRemover.setOnClickListener(new View.OnClickListener() {

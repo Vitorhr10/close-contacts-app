@@ -60,7 +60,6 @@ public class AmigoDAO {
         return gw.getDatabase().update(TABLE_AMIGOS, cv, "ID = ?", new String[] { id + ""}) > 0;
     }
 
-
     public boolean deletar(int id)
     {
         return gw.getDatabase().delete(TABLE_AMIGOS, "ID = ?", new String[] { id + ""}) > 0;
@@ -95,7 +94,6 @@ public class AmigoDAO {
 
         return amigos;
     }
-
 
     public Amigo retornarUltimoAmigo()
     {

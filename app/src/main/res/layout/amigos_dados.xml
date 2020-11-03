@@ -3,39 +3,93 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="50dp">
 
     <TextView
         android:id="@+id/txvAmigo"
-        android:layout_width="254dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="20dp"
         android:text="Nome do Amigo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnEditar"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.205" />
+        android:textSize="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/txvAmigoTel"
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-    <ImageButton
-        android:id="@+id/btnRemover"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/txvAmigoTel"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_delete"
-        tools:layout_editor_absoluteY="33dp" />
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="20dp"
+        android:text="Tel do Amigo"
+        android:textSize="18dp"
+        app:layout_constraintTop_toBottomOf="@+id/txvAmigo" />
 
-    <ImageButton
-        android:id="@+id/btnEditar"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
-        app:layout_constraintEnd_toStartOf="@+id/btnRemover"
-        app:srcCompat="@android:drawable/ic_menu_edit"
-        tools:layout_editor_absoluteY="33dp" />
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/txvAmigoTel"
+        tools:layout_editor_absoluteX="1dp">
+
+        <ImageButton
+            android:id="@+id/btnZap"
+            android:layout_width="56dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_whatsapp" />
+
+        <ImageButton
+            android:id="@+id/btnSms"
+            android:layout_width="56dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="10dp"
+            android:src="@android:drawable/stat_notify_chat"
+            android:tint="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/btnCall"
+            android:layout_width="56dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="10dp"
+            android:src="@android:drawable/ic_menu_call" />
+
+        <ImageButton
+            android:id="@+id/btnEditar"
+            android:layout_width="56dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="10dp"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+        <ImageButton
+            android:id="@+id/btnRemover"
+            android:layout_width="56dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="10dp"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+    </LinearLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

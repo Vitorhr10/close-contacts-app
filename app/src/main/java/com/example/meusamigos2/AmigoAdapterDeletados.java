@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ public class AmigoAdapterDeletados extends RecyclerView.Adapter<AmigoHolder> {
     public AmigoHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         return new AmigoHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.amigos_dados, parent, false));
+                .inflate(R.layout.amigos_dados_deletados, parent, false));
     }
 
     private Activity getActivity(View v)
@@ -46,13 +47,14 @@ public class AmigoAdapterDeletados extends RecyclerView.Adapter<AmigoHolder> {
     }
 
     @Override
-    public void onBindViewHolder (AmigoHolder holder, int posicao)
+    public void onBindViewHolder (final AmigoHolder holder, int posicao)
     {
         holder.txvAmigo.setText(amigos.get(posicao).getNome());
+        holder.txvAmigoTel.setText(amigos.get(posicao).getCelular());
 
         final Amigo amigo = amigos.get(posicao);
 
-        holder.txvAmigo.setOnClickListener(new View.OnClickListener() {
+        holder.btnRestaurar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final View view = v;
@@ -85,21 +87,6 @@ public class AmigoAdapterDeletados extends RecyclerView.Adapter<AmigoHolder> {
                         .show();
             }
         });
-
-        holder.btnEditar.setVisibility(View.INVISIBLE);
-
-        holder.btnEditar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Activity activity = getActivity(view);
-                    Intent intent = activity.getIntent();
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    intent.putExtra("amigo", amigo);
-                    activity.finish();
-                    activity.startActivity(intent);
-                }
-            }
-        );
 
         holder.btnRemover.setOnClickListener(new View.OnClickListener() {
             @Override

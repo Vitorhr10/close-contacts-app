@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,155 +23,249 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 public class MainActivity extends AppCompatActivity {
+
+    int status = 1;
+    public boolean listarDeletados = false;
+
+    TextView text,errorText;
+
+    Button show;
+
+    @Override
+
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.busca_de_dados);
+
+
+        text = (TextView) findViewById(R.id.textView);
+
+        errorText = (TextView) findViewById(R.id.textView2);
+
+        show = (Button) findViewById(R.id.button);
+
+
+
+        show.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+
+            public void onClick(View view) {
+
+                new Async().execute();
+
+            }
+
+        });
+
+    }
+
+    class Async extends AsyncTask<Void, Void, Void> {
+
+        String records = "",error="";
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            try
+
+            {
+                Class.forName("com.mysql.jdbc.Driver");
+
+                Connection connection = DriverManager.getConnection("jdbc:mysql://108.179.253.78:3306/dreco836_Amigos?characterEncoding=latin1", "dreco836_amigos", "amigos2020");
+
+                Statement statement = connection.createStatement();
+
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM MeusAmigos WHERE RA = 5146110");
+
+                String nome;
+
+                while(resultSet.next()) {
+                    records += "Nome: " + resultSet.getString("Nome") + "\n"
+                            + "Tipo de Sexo: " + resultSet.getString("Sexo") + "\n"
+                            + "Apelido: " + resultSet.getString("Apelido") + "\n"
+                            + "\n";
+                }
+            }
+
+            catch(Exception e)
+            {
+                error = e.toString();
+            }
+            return null;
+        }
+
+        @Override
+
+        protected void onPostExecute(Void aVoid) {
+
+            text.setText(records);
+
+            if(error != "")
+
+                errorText.setText(error);
+
+            super.onPostExecute(aVoid);
+
+        }
+    }
+
+    // finish
 
     boolean lista_deletados = false;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActivityCompat.requestPermissions(this, new String[] {
-                Manifest.permission.SEND_SMS
-        }, 1);
-
-        if (lista_deletados) {
-            configurarRecyclerView(0);
-        } else {
-            configurarRecyclerView(1);
-        }
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                findViewById(R.id.includemain).setVisibility(View.INVISIBLE);
-                findViewById(R.id.includecadastro).setVisibility(View.VISIBLE);
-                findViewById(R.id.include_amigos_listagem).setVisibility(View.INVISIBLE);
-                findViewById(R.id.include_amigos_deletados).setVisibility(View.INVISIBLE);
-                //findViewById(R.id.include_enviar_sms).setVisibility(View.INVISIBLE);
-            }
-        });
-
-        final TextView titulo = (TextView) findViewById(R.id.txtTitulo);
-
-        final FloatingActionButton fab2 = findViewById(R.id.fab2);
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (lista_deletados) {
-                    lista_deletados = !lista_deletados;
-                    findViewById(R.id.include_amigos_deletados).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.include_amigos_listagem).setVisibility(View.VISIBLE);
-                    findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                    fab2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#CC0000")));
-                    fab2.setImageResource(R.drawable.ic_delete_48);
-                    configurarRecyclerView(1);
-                } else {
-                    lista_deletados = !lista_deletados;
-                    findViewById(R.id.include_amigos_deletados).setVisibility(View.VISIBLE);
-                    findViewById(R.id.include_amigos_listagem).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.fab).setVisibility(View.INVISIBLE);
-                    fab2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0000FF")));
-                    fab2.setImageResource(R.drawable.ic_list_alt_48);
-                    configurarRecyclerView(0);
-                }
-            }
-        });
-
-        Button btnSalvar = (Button)findViewById(R.id.btnSalvar);
-        btnSalvar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditText edtNome = (EditText)findViewById(R.id.edtNome);
-                EditText edtCelular = (EditText)findViewById(R.id.edtCelular);
-
-                String nome = edtNome.getText().toString();
-                String celular = edtCelular.getText().toString();
-                int status = 0;
-
-                AmigoDAO dao = new AmigoDAO(getBaseContext());
-                boolean ok;
-
-                if (amigoEditado != null)
-                {
-                    ok = dao.salvar (amigoEditado.getId(), nome, celular, 0);
-                }
-                else
-                {
-                    ok = dao.salvar(nome, celular, status);
-                }
-
-                if(ok)
-                {
-                    Amigo amigo = dao.retornarUltimoAmigo();
-
-                    if (amigoEditado != null)
-                    {
-                        adapter.atualizarAmigo(amigo);
-                        amigoEditado = null;
-                    }
-                    else
-                    {
-                        adapter.adicionarAmigo(amigo);
-                    }
-
-                    edtNome.setText("");
-                    edtCelular.setText("");
-
-                    Snackbar.make(view, "Amigo salvo com sucesso!", Snackbar.LENGTH_LONG)
-                            .setAction("Inclusão", null).show();
-
-                    findViewById(R.id.includemain).setVisibility(View.VISIBLE);
-                    findViewById(R.id.includecadastro).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                    findViewById(R.id.include_amigos_listagem).setVisibility(View.VISIBLE);
-
-                }
-                else
-                {
-                    Snackbar.make(view, "Erro ao gravar os dados do Amigo ["+nome+"]", Snackbar.LENGTH_LONG)
-                            .setAction("Inclusão", null).show();
-                }
-            }
-        });
-
-        Button btnCancelar = (Button)findViewById(R.id.btnCancelar);
-        btnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                findViewById(R.id.includemain).setVisibility(View.VISIBLE);
-                findViewById(R.id.includecadastro).setVisibility(View.INVISIBLE);
-                findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                findViewById(R.id.include_amigos_listagem).setVisibility(View.VISIBLE);
-            }
-        });
-
-        Intent intent = getIntent();
-
-        if (intent.hasExtra("amigo"))
-        {
-            findViewById(R.id.includemain).setVisibility(View.INVISIBLE);
-            findViewById(R.id.includecadastro).setVisibility(View.VISIBLE);
-            findViewById(R.id.fab).setVisibility(View.INVISIBLE);
-            findViewById(R.id.include_amigos_listagem).setVisibility(View.INVISIBLE);
-
-            amigoEditado = (Amigo) intent.getSerializableExtra("amigo");
-            EditText edtNome = (EditText)findViewById(R.id.edtNome);
-            EditText edtCelular = (EditText)findViewById(R.id.edtCelular);
-
-            edtNome.setText(amigoEditado.getNome());
-            edtCelular.setText(amigoEditado.getCelular());
-        }
-    }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main);
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//
+//        ActivityCompat.requestPermissions(this, new String[] {
+//                Manifest.permission.SEND_SMS
+//        }, 1);
+//
+//        if (lista_deletados) {
+//            configurarRecyclerView(0);
+//        } else {
+//            configurarRecyclerView(1);
+//        }
+//
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                findViewById(R.id.includemain).setVisibility(View.INVISIBLE);
+//                findViewById(R.id.includecadastro).setVisibility(View.VISIBLE);
+//                findViewById(R.id.include_amigos_listagem).setVisibility(View.INVISIBLE);
+//                findViewById(R.id.include_amigos_deletados).setVisibility(View.INVISIBLE);
+//                //findViewById(R.id.include_enviar_sms).setVisibility(View.INVISIBLE);
+//            }
+//        });
+//
+//        final TextView titulo = (TextView) findViewById(R.id.txtTitulo);
+//
+//        final FloatingActionButton fab2 = findViewById(R.id.fab2);
+//        fab2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (lista_deletados) {
+//                    lista_deletados = !lista_deletados;
+//                    findViewById(R.id.include_amigos_deletados).setVisibility(View.INVISIBLE);
+//                    findViewById(R.id.include_amigos_listagem).setVisibility(View.VISIBLE);
+//                    findViewById(R.id.fab).setVisibility(View.VISIBLE);
+//                    fab2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#CC0000")));
+//                    fab2.setImageResource(R.drawable.ic_delete_48);
+//                    configurarRecyclerView(1);
+//                } else {
+//                    lista_deletados = !lista_deletados;
+//                    findViewById(R.id.include_amigos_deletados).setVisibility(View.VISIBLE);
+//                    findViewById(R.id.include_amigos_listagem).setVisibility(View.INVISIBLE);
+//                    findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+//                    fab2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0000FF")));
+//                    fab2.setImageResource(R.drawable.ic_list_alt_48);
+//                    configurarRecyclerView(0);
+//                }
+//            }
+//        });
+//
+//        Button btnSalvar = (Button)findViewById(R.id.btnSalvar);
+//        btnSalvar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                EditText edtNome = (EditText)findViewById(R.id.edtNome);
+//                EditText edtCelular = (EditText)findViewById(R.id.edtCelular);
+//
+//                String nome = edtNome.getText().toString();
+//                String celular = edtCelular.getText().toString();
+//                int status = 0;
+//
+//                AmigoDAO dao = new AmigoDAO(getBaseContext());
+//                boolean ok;
+//
+//                if (amigoEditado != null)
+//                {
+//                    ok = dao.salvar (amigoEditado.getId(), nome, celular, 0);
+//                }
+//                else
+//                {
+//                    ok = dao.salvar(nome, celular, status);
+//                }
+//
+//                if(ok)
+//                {
+//                    Amigo amigo = dao.retornarUltimoAmigo();
+//
+//                    if (amigoEditado != null)
+//                    {
+//                        adapter.atualizarAmigo(amigo);
+//                        amigoEditado = null;
+//                    }
+//                    else
+//                    {
+//                        adapter.adicionarAmigo(amigo);
+//                    }
+//
+//                    edtNome.setText("");
+//                    edtCelular.setText("");
+//
+//                    Snackbar.make(view, "Amigo salvo com sucesso!", Snackbar.LENGTH_LONG)
+//                            .setAction("Inclusão", null).show();
+//
+//                    findViewById(R.id.includemain).setVisibility(View.VISIBLE);
+//                    findViewById(R.id.includecadastro).setVisibility(View.INVISIBLE);
+//                    findViewById(R.id.fab).setVisibility(View.VISIBLE);
+//                    findViewById(R.id.include_amigos_listagem).setVisibility(View.VISIBLE);
+//
+//                }
+//                else
+//                {
+//                    Snackbar.make(view, "Erro ao gravar os dados do Amigo ["+nome+"]", Snackbar.LENGTH_LONG)
+//                            .setAction("Inclusão", null).show();
+//                }
+//            }
+////        });
+//
+//        Button btnCancelar = (Button)findViewById(R.id.btnCancelar);
+//        btnCancelar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                findViewById(R.id.includemain).setVisibility(View.VISIBLE);
+//                findViewById(R.id.includecadastro).setVisibility(View.INVISIBLE);
+//                findViewById(R.id.fab).setVisibility(View.VISIBLE);
+//                findViewById(R.id.include_amigos_listagem).setVisibility(View.VISIBLE);
+//            }
+//        });
+//
+//        Intent intent = getIntent();
+//
+//        if (intent.hasExtra("amigo"))
+//        {
+//            findViewById(R.id.includemain).setVisibility(View.INVISIBLE);
+//            findViewById(R.id.includecadastro).setVisibility(View.VISIBLE);
+//            findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+//            findViewById(R.id.include_amigos_listagem).setVisibility(View.INVISIBLE);
+//
+//            amigoEditado = (Amigo) intent.getSerializableExtra("amigo");
+//            EditText edtNome = (EditText)findViewById(R.id.edtNome);
+//            EditText edtCelular = (EditText)findViewById(R.id.edtCelular);
+//
+//            edtNome.setText(amigoEditado.getNome());
+//            edtCelular.setText(amigoEditado.getCelular());
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

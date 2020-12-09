@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Statement statement = connection.createStatement();
 
-                ResultSet resultSet = statement.executeQuery("SELECT * FROM MeusAmigos WHERE RA = 5146110");
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM MeusAmigos WHERE RA = 5143855");
 
                 String nome;
 
